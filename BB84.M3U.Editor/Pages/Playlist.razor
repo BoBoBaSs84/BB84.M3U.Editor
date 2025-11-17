@@ -1,0 +1,116 @@
+@page "/playlist"
+
+@using BB84.M3U
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>M3U Playlist Editor</PageTitle>
+
+<h2>M3U Playlist Editor</h2>
+
+<InputFile OnChange="OnFileSelected" accept=".m3u" />
+<button class="btn btn-success ms-2" @onclick="InitializeNewPlaylist">New Empty Playlist</button>
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+	<div class="alert alert-danger mt-2">@errorMessage</div>
+}
+
+@if (playlist != null)
+{
+	<div class="mt-4">
+		<h4>Playlist Metadata</h4>
+		<EditForm Model="@playlist">
+			<div class="row mb-2">
+				<div class="col-md-3">
+					<label>UrlTvg</label>
+					<InputText class="form-control" @bind-Value="playlist.UrlTvg" />
+				</div>
+				<div class="col-md-2">
+					<label>Cache</label>
+					<InputNumber class="form-control" @bind-Value="playlist.Cache" />
+				</div>
+				<div class="col-md-3">
+					<label>Deinterlace</label>
+					<InputSelect class="form-control" @bind-Value="playlist.Deinterlace">
+						@foreach (var value in Enum.GetValues<Deinterlace>())
+						{
+							<option value="@value">@value</option>
+						}
+					</InputSelect>
+				</div>
+				<div class="col-md-2">
+					<label>Refresh</label>
+					<InputNumber class="form-control" @bind-Value="playlist.Refresh" />
+				</div>
+				<div class="col-md-2 d-flex align-items-end">
+					<button class="btn btn-success" @onclick="SavePlaylist" type="button">Save Playlist</button>
+				</div>
+			</div>
+		</EditForm>
+
+		<h4>Entries</h4>
+		<button class="btn btn-primary mb-2" @onclick="AddEntry">Add Entry</button>
+		<table class="table table-sm table-striped">
+			<thead>
+				<tr>
+					<th>Title</th>
+					<th>File Path</th>
+					<th>Duration</th>
+					<th>Censored</th>
+					<th>TvgId</th>
+					<th>TvgName</th>
+					<th>TvgLogo</th>
+					<th>GroupId</th>
+					<th>GroupTitle</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (int i = 0; i < playlist.Entries.Count; i++)
+				{
+					var entry = playlist.Entries[i];
+					<tr>
+						<td>
+							<InputText class="form-control" @bind-Value="entry.Title" />
+						</td>
+						<td>
+							<InputText class="form-control" @bind-Value="entry.FilePath" />
+						</td>
+						<td>
+							<InputNumber class="form-control" @bind-Value="entry.Duration" />
+						</td>
+						@if (entry.Metadata is not null)
+						{
+							<td>
+								<InputCheckbox class="form-check-input" @bind-Value="entry.Metadata.Censored" />
+							</td>
+							<td>
+								<InputText class="form-control" @bind-Value="entry.Metadata.TvgId" />
+							</td>
+							<td>
+								<InputText class="form-control" @bind-Value="entry.Metadata.TvgName" />
+							</td>
+							<td>
+								<InputText class="form-control" @bind-Value="entry.Metadata.TvgLogo" />
+							</td>
+							<td>
+								<InputText class="form-control" @bind-Value="entry.Metadata.GroupId" />
+							</td>
+							<td>
+								<InputText class="form-control" @bind-Value="entry.Metadata.GroupTitle" />
+							</td>
+						}
+						<td>
+							<button class="btn btn-danger btn-sm" @onclick="() => RemoveEntry(i)">Remove</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+	<div class="alert alert-success mt-2">@successMessage</div>
+}

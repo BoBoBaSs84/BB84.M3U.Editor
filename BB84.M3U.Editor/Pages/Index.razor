@@ -1,0 +1,22 @@
+﻿@page "/"
+
+<PageTitle>BB84.M3U.Editor - IPTV Playlist Editor</PageTitle>
+
+<div class="container mt-5">
+	<div class="text-center">
+		<h1 class="display-4">BB84.M3U.Editor - IPTV Playlist Editor</h1>
+		<p class="lead">Create, read, edit, and save your M3U IPTV playlists with ease.</p>
+		<hr />
+		<p>
+			<strong>Features:</strong>
+			<ul class="list-unstyled">
+				<li>📄 Create new M3U playlists</li>
+				<li>📂 Load existing M3U playlists</li>
+				<li>📝 Edit channels, metadata, and groups</li>
+				<li>💾 Save your updated playlists</li>
+			</ul>
+		</p>
+		<button class="btn btn-success btn-lg" @onclick="CreateNewPlaylist">Create New Playlist</button>
+		<a class="btn btn-primary btn-lg me-2" href="/playlist">Open Playlist</a>
+	</div>
+</div>
